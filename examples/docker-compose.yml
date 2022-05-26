@@ -1,0 +1,28 @@
+version: "2.4"
+
+services:
+  couch-db:
+    container_name: couch-db
+    image: tiredofit/couchdb
+    ports:
+      - 5984:5984
+    volumes:
+      - ./config:/config
+      - ./data:/data
+      - ./logs:/logs
+    environment:
+      - TIMEZONE=America/Vancouver
+      - CONTAINER_NAME=couch-db
+
+      - ADMIN_USER=admin
+      - ADMIN_PASS=admin
+      - NODE_MODE=SINGLE
+      - LOG_TYPE=FILE
+
+    networks:
+      - services
+    restart: always
+
+networks:
+  services:
+    external: true

@@ -31,7 +31,6 @@ This is a work in progress and not stable for production use.
   - [Persistent Storage](#persistent-storage)
   - [Environment Variables](#environment-variables)
     - [Base Images used](#base-images-used)
-      - [Couch Specific](#couch-specific)
   - [Networking](#networking)
 - [Maintenance](#maintenance)
   - [Shell Access](#shell-access)
@@ -95,9 +94,21 @@ Be sure to view the following repositories to understand all the customizable op
 | ------------------------------------------------------ | -------------------------------------- |
 | [OS Base](https://github.com/tiredofit/docker-alpine/) | Customized Image based on Alpine Linux |
 
-##### Couch Specific
-
-None at this time
+| Parameter            | Description                                    | Default       |
+| -------------------- | ---------------------------------------------- | ------------- |
+| `ADMIN_USER`         | Admin User                                     | `admin`       |
+| `ADMIN_PASS`         | Admin Password                                 | `admin`       |
+| `CONFIG_PATH`        | Configuration file path                        | `/config/`    |
+| `DATA_PATH`          | Database file path                             | `/data/`      |
+| `ENABLE_SOFT_DELETE` | Soft Delete databases instead of deleting hard | `FALSE`       |
+| `INDEX_PATH`         | Index Path                                     | `/data/`      |
+| `LISTEN_PORT`        | Listening Port                                 | `5984`        |
+| `LOG_TYPE`           | Log Type `CONSOLE` or `FILE`                   | `FILE`        |
+| `LOG_FILE`           | Log Filename                                   | `couchdb.log` |
+| `LOG_LEVEL`          | Log Level                                      | `INFO`        |
+| `LOG_PATH`           | Log Path                                       | `/logs/`      |
+| `COMPRESSION_TYPE`   | File compresstion algorithm                    | `snappy`      |
+| `NODE_MODE`          | `SINGLE` only at this time                     | `SINGLE`      |
 
 
 ### Networking

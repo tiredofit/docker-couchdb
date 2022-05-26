@@ -1,0 +1,98 @@
+#!/command/with-contenv bash
+
+bootstrap_directories() {
+    mkdir -p "${CONFIG_PATH}"
+    rm -rf /opt/couchdb/etc/local.d
+    ln -sf "${CONFIG_PATH}" /opt/couchdb/etc/local.d
+    ln -sf "${CONFIG_PATH}"/vm.args /opt/couchdb/etc/vm.args
+    chown -R couchdb:couchdb "${CONFIG_PATH}"
+    find /opt/couchdb/etc -type d ! -perm 0755 -exec chmod -f 0755 '{}' +
+    find /opt/couchdb/etc -type f ! -perm 0644 -exec chmod -f 0644 '{}' +
+    find "{CONFIG_PATH}" \! \( -user couchdb -group couchdb \) -exec chown -f couchdb:couchdb '{}' +
+    find "${CONFIG_PATH}" -type d ! -perm 0755 -exec chmod -f 0755 '{}' +
+    find "${CONFIG_PATH}" -type f ! -perm 0644 -exec chmod -f 0644 '{}' +
+
+    mkdir -p "${DATA_PATH}"
+    chown -R couchdb:couchdb "${DATA_PATH}"
+    sed -i "s|/data|${DATA_PATH}|g" /etc/passwd
+	find "{DATA_PATH}" \! \( -user couchdb -group couchdb \) -exec chown -f couchdb:couchdb '{}' +
+    find "${DATA_PATH}" -type d ! -perm 0755 -exec chmod -f 0755 '{}' +
+
+    if [ "${DATA_PATH}" != "${INDEX_PATH}" ] ; then
+        mkdir -p "${INDEX_PATH}"
+        find "${INDEX_PATH}" -type d -exec chmod 0770 {} \;
+        chown -R couchdb:couchdb "${INDEX_PATH}"
+        find "${INDEX_PATH}" -type d ! -perm 0755 -exec chmod -f 0755 '{}' +
+        find "${INDEX_PATH}" -type f ! -perm 0644 -exec chmod -f 0644 '{}' +
+    fi
+
+    mkdir -p "${LOG_PATH}"
+    chown -R couchdb "${LOG_PATH}"
+    chown -R couchdb:couchdb /opt/couchdb
+}
+
+sanity_test() {
+    sanity_var ADMIN_USER "Admin User"
+    sanity_var ADMIN_PASS "Admin Password"
+}
+
+generate_configuration() {
+    case "${LOG_TYPE,,}" in
+        "console" ) log_type="stderr" ;;
+        "file" ) log_type="file" ;;
+    esac
+
+    case "${NODE_MODE,,}" in
+        "single" ) cluster_node="single_node = true" ;;
+        "multi" ) cluster_node="" ;;
+    esac
+
+    cat << EOCONFIG | sudo tee ${CONFIG_PATH}/couch.ini
+## Custom Generated CouchDB Configuration! Do not edit, instead set ENV Vars
+## If you want to use your own configuration files set SETUP_TYPE=MANUAL when starting container
+## Last Generated on $(TZ=${TIMEZONE} date +'%Y-%m-%d %H:%M:%S %Z')
+
+[admins]
+${ADMIN_USER} = ${ADMIN_PASS}
+
+[log]
+level = ${LOG_LEVEL,,}
+writer = ${log_type}
+file = ${LOG_PATH}/${LOG_FILE}
+
+[chttpd]
+port = ${LISTEN_PORT}
+bind_address = 0.0.0.0
+
+[couchdb]
+enable_database_recovery = ${ENABLE_SOFT_DELETE,,}
+file_compression = ${COMPRESSION_TYPE}
+database_dir = ${DATA_PATH}
+view_index_dir = ${INDEX_PATH}
+${cluster_node}
+EOCONFIG
+
+    cat << EOVMOPTS | sudo tee ${CONFIG_PATH}/vm.args
+## Custom Generated Erlang vm.aregs Configuration! Do not edit, instead set ENV Vars
+## If you want to use your own configuration files set SETUP_TYPE=MANUAL when starting container
+## Last Generated on $(TZ=${TIMEZONE} date +'%Y-%m-%d %H:%M:%S %Z')
+
+# Ensure that the Erlang VM listens on a known port
+-kernel inet_dist_listen_min 9100
+-kernel inet_dist_listen_max 9100
+
+# Tell kernel and SASL not to log anything
+-kernel error_logger silent
+-sasl sasl_error_logger false
+
+# Use kernel poll functionality if supported by emulator
++K true
+
+# Start a pool of asynchronous IO threads
++A 16
+
+# Comment this line out to enable the interactive Erlang shell on startup
++Bd -noinput
+EOVMOPTS
+
+}

@@ -1,0 +1,12 @@
+#!/command/with-contenv bash
+
+source /assets/functions/00-container
+PROCESS_NAME="couchdb"
+prepare_server defaults
+check_container_initialized
+check_service_initialized init
+liftoff
+
+print_start "Starting CouchDB ${COUCHDB_VERSION}"
+HOME=${DATA_PATH}
+s6-setuidgid couchdb /opt/couchdb/bin/couchdb
