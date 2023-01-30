@@ -83,4 +83,4 @@ RUN source /assets/functions/00-container && \
     apk del .erlang-build-deps .couchdb-build-deps && \
     rm -rf /tmp/* /var/cache/apk/*
 
-ADD install  /
+COPY install  /

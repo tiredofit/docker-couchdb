@@ -1,7 +1,7 @@
 # github.com/tiredofit/docker-couchdb
 
 [![GitHub release](https://img.shields.io/github/v/tag/tiredofit/docker-couchdb?style=flat-square)](https://github.com/tiredofit/docker-couchdb/releases/latest)
-[![Build Status](https://img.shields.io/github/workflow/status/tiredofit/docker-couchdb/build?style=flat-square)](https://github.com/tiredofit/docker-couchdb/actions?query=workflow%3Abuild)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/tiredofit/docker-couchdb/main.yml?branch=main&style=flat-square)](https://github.com/tiredofit/docker-couchdb/actions)
 [![Docker Stars](https://img.shields.io/docker/stars/tiredofit/couchdb.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/tiredofit/couchdb/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/couchdb.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/tiredofit/couchdb/)
 [![Become a sponsor](https://img.shields.io/badge/sponsor-tiredofit-181717.svg?logo=github&style=flat-square)](https://github.com/sponsors/tiredofit)
