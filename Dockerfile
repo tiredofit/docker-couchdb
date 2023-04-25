@@ -1,7 +1,7 @@
 FROM docker.io/tiredofit/alpine:3.16
 LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
-ENV COUCHDB_VERSION=3.2.2 \
+ENV COUCHDB_VERSION=3.3.2 \
     ERLANG_VERSION=OTP-24.3.4 \
     ERLANG_REBAR_VERSION=3.18.0 \
     CONTAINER_ENABLE_MESSAGING=FALSE \
