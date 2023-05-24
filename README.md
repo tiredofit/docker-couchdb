@@ -51,7 +51,7 @@ Clone this repository and build the image with `docker build -t (imagename) .`
 Builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/couchdb)
 
 ```bash
-docker pull docker.io/tiredofdit/couchdb:(imagetag)
+docker pull docker.io/tiredofit/couchdb:(imagetag)
 ```
 Builds of the image are also available on the [Github Container Registry](https://github.com/tiredofit/docker-couchdb/pkgs/container/docker-couchdb) 
  
